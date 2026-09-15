@@ -34,30 +34,31 @@
                                           selected: @comparison.slugs) %>
   </div>
 
-  <%# One chart per workload, side by side rather than collapsed into a single
-      rank. A chip can lead on one scene and trail on another, and that is
-      information, not noise to be averaged away. %>
-  <section class="card mt-3 overflow-hidden"
-           data-controller="compare-highlight">
-    <div class="border-b border-line px-5 py-4">
-      <h2 class="eyebrow text-accent">Results by workload</h2>
-      <p class="mt-1 text-[13px] text-ink-muted">
-        Median of public submissions on each scene. Never averaged across scenes or
-        across benchmark versions.
-      </p>
-    </div>
+  <div data-controller="compare-highlight">
+    <%= render SpecTableComponent.new(comparison: @comparison) %>
 
-    <% if @comparison.workload_charts.empty? %>
-      <p class="px-5 py-8 text-center text-sm text-ink-muted">
-        No published figures for these processors in <%= @version&.label %>.
-        Try another benchmark series.
-      </p>
-    <% else %>
-      <% @comparison.workload_charts.each do |chart| %>
-        <%= render WorkloadChartComponent.new(chart: chart) %>
+    <%# One chart per workload, side by side rather than collapsed into a single
+        rank. A chip can lead on one scene and trail on another, and that is
+        information, not noise to be averaged away. %>
+    <section class="card mt-3 overflow-hidden">
+      <div class="border-b border-line px-5 py-4">
+        <h2 class="eyebrow text-accent">Results by workload</h2>
+        <p class="mt-1 text-[13px] text-ink-muted">
+          Median of public submissions on each scene. Never averaged across scenes or
+          across benchmark versions.
+        </p>
+      </div>
+
+      <% if @comparison.workload_charts.empty? %>
+        <p class="px-5 py-8 text-center text-sm text-ink-muted">
+          No published figures for these processors in <%= @version&.label %>.
+          Try another benchmark series.
+        </p>
+      <% else %>
+        <% @comparison.workload_charts.each do |chart| %>
+          <%= render WorkloadChartComponent.new(chart: chart) %>
+        <% end %>
       <% end %>
-    <% end %>
-  </section>
-
-  <%= render SpecTableComponent.new(comparison: @comparison) %>
+    </section>
+  </div>
 <% end %>

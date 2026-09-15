@@ -21,12 +21,32 @@ class PresentationContractTest < ActionDispatch::IntegrationTest
     assert_match(/samples\/min/, response.body)
   end
 
-  test "a compare row shows the sample count, version and date" do
+  test "a compare chart does not print run stats under the bar" do
     get compare_path(cpus: @fast.slug)
 
-    assert_match(/6 runs/, response.body)
-    assert_match(/Blender 4\.x/, response.body)
-    assert_match(/to #{Time.current.utc.strftime('%b %Y')}/, response.body)
+    refute_match(/6 runs/, response.body)
+    refute_match(/IQR\/2/, response.body)
+    refute_match(/to #{Time.current.utc.strftime('%b %Y')}/, response.body)
+    assert_match(%r{/measurements/\d+}, response.body)
+  end
+
+  test "specifications sit above results and hide the source in a tooltip" do
+    Cpus::SpecWriter.new(Source[Source::WIKIDATA]).write(
+      @fast, spec_key: "cores", value: 16,
+      statement_url: "https://www.wikidata.org/wiki/Q123"
+    )
+
+    get compare_path(cpus: @fast.slug)
+
+    specs_at = response.body.index("Specifications")
+    results_at = response.body.index("Results by workload")
+    assert specs_at, "expected a Specifications heading"
+    assert results_at, "expected a Results by workload heading"
+    assert specs_at < results_at, "Specifications should sit above Results by workload"
+
+    assert_match(/role="tooltip"/, response.body)
+    assert_match(/Wikidata/, response.body)
+    assert_match(%r{https://www.wikidata.org/wiki/Q123}, response.body)
   end
 
   test "every figure links through to its own measurements" do

@@ -34,19 +34,38 @@
                 <td class="px-5 py-2.5 align-top"
                     data-cpu-slug="<%= cpu.slug %>"
                     data-compare-highlight-target="item">
-                  <span class="figure font-semibold text-ink"><%= cell_value(row, cpu) %></span>
                   <% if (label = source_label(row, cpu)) %>
-                    <span class="eyebrow mt-0.5 block text-ink-faint">
-                      <% if (url = source_url(row, cpu)) %>
-                        <%= link_to label, url, class: "hover:text-ink-muted underline underline-offset-2",
-                                    rel: "noopener", target: "_blank" %>
-                      <% else %>
-                        <%= label %>
-                      <% end %>
-                      <% if (samples = sample_label(row, cpu)) %>
-                        <span class="ms-1"><%= samples %></span>
-                      <% end %>
+                    <span class="relative inline-flex"
+                          data-controller="tooltip"
+                          data-action="mouseenter->tooltip#show mouseleave->tooltip#hide focusin->tooltip#show focusout->tooltip#hide">
+                      <span class="figure cursor-help font-semibold text-ink decoration-dotted decoration-ink-faint underline underline-offset-4"
+                            tabindex="0"
+                            aria-describedby="<%= tooltip_id(row, cpu) %>-label">
+                        <%= cell_value(row, cpu) %>
+                      </span>
+                      <span id="<%= tooltip_id(row, cpu) %>-label" class="sr-only">
+                        <%= [label, sample_label(row, cpu)].compact.join(" · ") %>
+                      </span>
+                      <span id="<%= tooltip_id(row, cpu) %>"
+                            class="tip"
+                            role="tooltip"
+                            hidden
+                            data-tooltip-target="panel">
+                        <span class="eyebrow flex flex-col gap-0.5 text-ink">
+                          <% if (url = source_url(row, cpu)) %>
+                            <%= link_to label, url, class: "hover:text-accent underline underline-offset-2",
+                                        rel: "noopener", target: "_blank" %>
+                          <% else %>
+                            <%= label %>
+                          <% end %>
+                          <% if (samples = sample_label(row, cpu)) %>
+                            <span class="text-ink-faint"><%= samples %></span>
+                          <% end %>
+                        </span>
+                      </span>
                     </span>
+                  <% else %>
+                    <span class="figure font-semibold text-ink"><%= cell_value(row, cpu) %></span>
                   <% end %>
                 </td>
               <% end %>

@@ -1,9 +1,10 @@
 # Reference specifications for the compared CPUs.
 #
 # Every cell cites the source it came from, because a spec figure is a claim
-# like any other. Where nothing is known the table says so rather than printing
-# a grid of dashes — Wikidata covers only a few hundred parts, so an empty spec
-# sheet is the common case, not a failure.
+# like any other. The citation lives in a tooltip on the value rather than as
+# a footnote under it. Where nothing is known the table says so rather than
+# printing a grid of dashes — Wikidata covers only a few hundred parts, so an
+# empty spec sheet is the common case, not a failure.
 class SpecTableComponent < ApplicationComponent
   def initialize(comparison:)
     @comparison = comparison
@@ -29,6 +30,8 @@ class SpecTableComponent < ApplicationComponent
   end
 
   def source_url(row, cpu) = row.spec_for(cpu)&.statement_url
+
+  def tooltip_id(row, cpu) = "spec-source-#{row.spec_key}-#{cpu.slug}"
 
   # A figure read back out of the runs is not a vendor specification, so it
   # carries the same kind of provenance a score does: how many runs it came
