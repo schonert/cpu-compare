@@ -3,6 +3,15 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # SECRET_KEY_BASE is generated onto the deploy volume by bin/docker-entrypoint
+  # on first boot, so no master key has to reach CI. It is read here rather than
+  # only exported by the entrypoint because `kamal app exec` and `kamal console`
+  # bypass the entrypoint, and would otherwise boot without a key.
+  secret_key_base_path = ENV.fetch("SECRET_KEY_BASE_PATH", "/workspace/data/secret_key_base")
+  if ENV["SECRET_KEY_BASE"].blank? && File.exist?(secret_key_base_path)
+    config.secret_key_base = File.read(secret_key_base_path).strip
+  end
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
