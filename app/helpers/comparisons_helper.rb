@@ -6,6 +6,11 @@ module ComparisonsHelper
     compare_path(cpus: slugs.join(","), version: version.presence)
   end
 
+  def cpus_path_with(slug, selected:, version: nil, workload: nil, **filters)
+    slugs = (selected + [slug]).uniq.first(Comparison::MAX_CPUS)
+    cpus_path(filters.merge(cpus: slugs.join(","), version: version, workload: workload).compact)
+  end
+
   def compare_path_without(slug, selected:, version: nil)
     compare_path(cpus: (selected - [slug]).join(",").presence, version: version.presence)
   end

@@ -5,5 +5,5 @@ class ApplicationComponent < ViewComponent::Base
   include Turbo::FramesHelper
 
   delegate :compare_path_with, :compare_path_without, :compare_path_for_version,
-           :vendor_accent, :vendor_ink, :format_metric, :score_value, to: :helpers
+           :cpus_path_with, :vendor_accent, :vendor_ink, :format_metric, :score_value, to: :helpers
 end
