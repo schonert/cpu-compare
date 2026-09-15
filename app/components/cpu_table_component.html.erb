@@ -44,9 +44,9 @@
               </td>
               <td class="px-6 py-3 text-end">
                 <% if selected?(score.cpu) %>
-                  <span class="eyebrow text-ink-faint">Selected</span>
+                  <span class="text-xs text-ink-faint">Selected</span>
                 <% elsif full? %>
-                  <span class="eyebrow text-ink-faint">4 max</span>
+                  <span class="text-xs text-ink-faint">4 max</span>
                 <% else %>
                   <%= link_to "Add", add_path(score.cpu),
                               data: { action: "click->browse-selection#add" },

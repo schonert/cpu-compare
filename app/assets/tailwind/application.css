@@ -136,16 +136,6 @@
 }
 
 @layer components {
-  /* Micro kicker above display headings. The only uppercase element left;
-     section titles and table headers have their own voices below. */
-  .eyebrow {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    line-height: 1.4;
-    text-transform: uppercase;
-  }
-
   /* Card and section titles: 16px at the strong in-between weight. */
   .section-title {
     font-size: 16px;

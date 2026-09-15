@@ -2,7 +2,6 @@
 
 <article class="card overflow-hidden">
   <div class="border-b border-line px-6 py-6">
-    <p class="eyebrow mb-2 text-ink-muted">How these numbers are made</p>
     <h1 class="text-3xl font-strong">Methodology</h1>
     <p class="mt-2 max-w-[62ch] text-[15px] leading-relaxed text-ink-muted">
       Every figure on this site is a median of public benchmark submissions for one
@@ -65,11 +64,11 @@
                 <%= source.name %>
               <% end %>
             </span>
-            <span class="eyebrow text-ink-faint"><%= source.license %></span>
+            <span class="text-xs text-ink-faint"><%= source.license %></span>
             <% if source.licensed? %>
-              <span class="eyebrow rounded-full bg-accent-soft px-2 py-0.5 text-accent">Licensed — not ingested</span>
+              <span class="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent">Licensed — not ingested</span>
             <% elsif source.redistributable? %>
-              <span class="eyebrow text-ink-faint">Redistributable</span>
+              <span class="text-xs text-ink-faint">Redistributable</span>
             <% end %>
           </span>
           <p class="mt-0.5 max-w-[68ch] text-ink-muted"><%= source.notes %></p>

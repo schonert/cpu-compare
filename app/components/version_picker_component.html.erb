@@ -1,5 +1,4 @@
 <div class="flex flex-wrap items-center gap-2">
-  <span class="eyebrow text-ink-faint">Benchmark</span>
   <div class="flex flex-wrap items-center gap-1">
     <% versions.each do |version| %>
       <%= link_to version.label, path_for(version),
@@ -7,7 +6,7 @@
                   aria: { current: current?(version) ? "true" : nil } %>
     <% end %>
   </div>
-  <p class="eyebrow w-full text-ink-faint sm:w-auto">
+  <p class="w-full text-xs text-ink-faint sm:w-auto">
     Series are never combined — Cycles changes between majors
   </p>
 </div>
