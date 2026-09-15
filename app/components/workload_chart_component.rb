@@ -26,12 +26,12 @@ class WorkloadChartComponent < ApplicationComponent
 
   def value_classes(bar)
     ["figure shrink-0 text-end text-sm leading-none",
-     bar.best ? "font-semibold text-ink" : "font-medium text-ink"]
+     bar.best ? "font-strong text-ink" : "font-medium text-ink"]
   end
 
   def name_classes(bar)
     ["truncate text-[13px] leading-tight",
-     bar.best ? "font-semibold text-ink" : "font-normal text-ink-muted"]
+     bar.best ? "font-strong text-ink" : "font-normal text-ink-muted"]
   end
 
   def scale_label

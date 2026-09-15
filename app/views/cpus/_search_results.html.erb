@@ -1,6 +1,6 @@
 <%= turbo_frame_tag CpuSearchComponent::FRAME_ID do %>
   <% if query.present? && query.length >= 2 %>
-    <ul class="mt-2 divide-y divide-line-soft overflow-hidden rounded-xl bg-panel shadow-menu">
+    <ul class="mt-2 divide-y divide-line-soft overflow-hidden rounded-lg bg-panel shadow-menu">
       <% results.each do |cpu| %>
         <li>
           <%# These links live inside the results frame, so without breaking out

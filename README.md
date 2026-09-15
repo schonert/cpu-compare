@@ -215,14 +215,24 @@ yet**; their specs can be entered against those sources by hand meanwhile.
 ## Styling
 
 Tailwind CSS 4, with design tokens in `app/assets/tailwind/application.css`.
-The interface follows the Vercel design language, captured in `DESIGN.md`:
-an achromatic canvas (`#FAFAFA` ground, `#171717` text), white cards with
-12px radii whose boundaries are shadows rather than CSS borders, 6px radii on
-functional controls, pill shapes reserved for badges and tags, and a single
-interactive blue (`#0072F5`) used only for links, focus rings and active
-states. Focus uses the double-ring pattern (white inner ring, blue outer
-ring). Type is capped at three weights — 400/500/600, never bold — with tight
-tracking on display headings, and code is set in a monospace face.
+Two design languages share the file, each referenced verbatim in the repo:
+the Vercel palette, depth and focus in `DESIGN.md`, and the Linear type and
+spacing discipline in `linear.app/DESIGN.md`.
+
+The canvas is achromatic (`#FAFAFA` ground, `#171717` text) with white cards
+at 8px radii whose boundaries are shadows rather than CSS borders, 6px radii
+on functional controls, and a single interactive blue (`#0072F5`) used only
+for links, focus rings and active states. Focus uses the double-ring pattern.
+
+Typography is Inter Variable with Linear's in-between weights — 510 for
+emphasis, 590 for strong emphasis, nothing heavier — plus `cv01`/`ss03`
+everywhere except code and inputs, and tracking that tightens as size grows.
+Headings form a real scale (36px page titles, 16px section titles) instead of
+tracked-out capitals: `.section-title` carries card and section headings in
+sentence case, `.th-label` gives table headers a quiet 12px medium voice, and
+the micro uppercase `.eyebrow` survives only for kickers and chart
+annotations. Flowing text runs at 15px; sections breathe on a 24px rhythm
+with generous card padding, while table rows stay dense.
 
 Bars are drawn as upright ticks on a shared pitch by the `ticks` utility —
 the track and the filled portion use the same gradient, so their ticks land
@@ -233,13 +243,12 @@ is what keeps that alignment.
 
 Because the name column already identifies each row, bars stay monochrome for
 every row and the leader is marked by weight. Colour is never the only
-carrier of meaning — the leading value is semibold, and every figure is
+carrier of meaning — the leading value is strong, and every figure is
 printed next to its bar. Vendor identity lives in the small status dots,
 the one place chromatic color appears, at dot scale.
 
-Set in Inter as the open stand-in for Geist (the stack prefers Geist where
-installed). Lining figures come from the `.figure` class rather than from
-`body`, since tabular figures widen the hyphen.
+Lining figures come from the `.figure` class rather than from `body`, since
+tabular figures widen the hyphen.
 
 ## Tests
 

@@ -1,12 +1,12 @@
 <% content_for :title, "#{@score.cpu.name} — #{@score.workload.name}" %>
 
 <article class="card overflow-hidden">
-  <div class="border-b border-line px-5 py-5">
+  <div class="border-b border-line px-6 py-6">
     <p class="eyebrow mb-2 text-ink-muted">Measurements behind one figure</p>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="text-3xl font-strong">
       <%= @score.cpu.name %>
     </h1>
-    <p class="mt-1 text-sm text-ink-muted">
+    <p class="mt-1 text-[15px] text-ink-muted">
       <%= @score.workload.name %> &middot; <%= @score.benchmark_version.label %> &middot;
       <%= @score.benchmark_version.benchmark_suite.name %>
     </p>
@@ -19,14 +19,14 @@
         ["Samples", number_with_delimiter(@score.sample_count)],
         ["IQR", @score.iqr ? "#{number_with_precision(@score.iqr, precision: 1)} #{@score.metric_unit}" : "—"],
         ["Range", "#{number_with_precision(@score.minimum, precision: 1)} – #{number_with_precision(@score.maximum, precision: 1)}"]].each do |label, value| %>
-      <div class="bg-panel px-5 py-4">
-        <dt class="eyebrow text-ink-faint"><%= label %></dt>
-        <dd class="figure mt-1 text-lg font-semibold text-ink"><%= value %></dd>
+      <div class="bg-panel px-6 py-4">
+        <dt class="th-label"><%= label %></dt>
+        <dd class="figure mt-1 text-lg font-strong text-ink"><%= value %></dd>
       </div>
     <% end %>
   </dl>
 
-  <div class="border-t border-line px-5 py-4 text-[13px] text-ink-muted">
+  <div class="border-t border-line px-6 py-4 text-[13px] text-ink-muted">
     <p>
       Aggregated with the <%= Scoring::Config.current.statistic %>, quantiles by
       <%= Scoring::Config.current.quantile_method.tr("_", " ") %>.
@@ -46,11 +46,11 @@
   </div>
 </article>
 
-<section class="card mt-3 overflow-hidden">
-  <div class="border-b border-line px-5 py-4">
-    <h2 class="eyebrow text-ink">
+<section class="card mt-6 overflow-hidden">
+  <div class="border-b border-line px-6 py-5">
+    <h2 class="section-title">
       Individual runs
-      <span class="ms-2 text-ink-faint"><%= number_with_delimiter(@total) %> total</span>
+      <span class="ms-2 text-xs font-normal text-ink-faint"><%= number_with_delimiter(@total) %> total</span>
     </h2>
   </div>
 
@@ -59,25 +59,25 @@
       <thead>
         <tr class="border-b border-line-soft">
           <% ["Measured", "Value", "Build", "Cores", "Threads", "OS", "Reported as"].each do |head| %>
-            <th class="eyebrow px-5 py-2.5 text-start text-ink-faint"><%= head %></th>
+            <th class="th-label px-6 py-2.5 text-start"><%= head %></th>
           <% end %>
         </tr>
       </thead>
       <tbody>
         <% @submissions.each do |submission| %>
           <tr class="border-b border-line-soft last:border-b-0">
-            <td class="figure px-5 py-2 text-ink-muted"><%= submission.measured_at&.to_date %></td>
-            <td class="figure px-5 py-2 font-semibold text-ink">
+            <td class="figure px-6 py-2 text-ink-muted"><%= submission.measured_at&.to_date %></td>
+            <td class="figure px-6 py-2 font-strong text-ink">
               <%= number_with_precision(submission.value, precision: 2) %>
               <span class="text-xs font-normal text-ink-muted"><%= submission.metric_key == "render_time_seconds" ? "s" : "samples/min" %></span>
             </td>
-            <td class="px-5 py-2 text-ink-muted"><%= submission.benchmark_build %></td>
-            <td class="figure px-5 py-2 text-ink-muted"><%= submission.system_cores %></td>
-            <td class="figure px-5 py-2 text-ink-muted"><%= submission.device_threads %></td>
-            <td class="px-5 py-2 text-ink-muted"><%= submission.operating_system %></td>
+            <td class="px-6 py-2 text-ink-muted"><%= submission.benchmark_build %></td>
+            <td class="figure px-6 py-2 text-ink-muted"><%= submission.system_cores %></td>
+            <td class="figure px-6 py-2 text-ink-muted"><%= submission.device_threads %></td>
+            <td class="px-6 py-2 text-ink-muted"><%= submission.operating_system %></td>
             <%# The raw OS string, so a mis-normalised name is visible rather
                 than hidden behind the canonical one. %>
-            <td class="px-5 py-2 text-ink-faint"><%= submission.raw_device_name %></td>
+            <td class="px-6 py-2 text-ink-faint"><%= submission.raw_device_name %></td>
           </tr>
         <% end %>
       </tbody>

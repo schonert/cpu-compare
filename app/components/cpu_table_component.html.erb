@@ -1,6 +1,6 @@
 <section class="card overflow-hidden" data-controller="browse-selection">
-  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4">
-    <h2 class="eyebrow text-ink">Ranked by workload</h2>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-6 py-4">
+    <h2 class="section-title">Ranked by workload</h2>
     <div class="flex flex-wrap items-center gap-1">
       <% workloads.each do |candidate| %>
         <%= link_to candidate.name, workload_path(candidate.key),
@@ -11,7 +11,7 @@
   </div>
 
   <% if scores.empty? %>
-    <p class="px-5 py-8 text-center text-sm text-ink-muted">
+    <p class="px-6 py-8 text-center text-sm text-ink-muted">
       Nothing matches. Try a different search, or another workload.
     </p>
   <% else %>
@@ -19,30 +19,30 @@
       <table class="w-full border-collapse text-[13px]">
         <thead>
           <tr class="border-b border-line-soft">
-            <th class="eyebrow px-5 py-2.5 text-end text-ink-faint">#</th>
-            <th class="eyebrow px-5 py-2.5 text-start text-ink-faint">Processor</th>
-            <th class="eyebrow px-5 py-2.5 text-start text-ink-faint">
+            <th class="th-label px-6 py-2.5 text-end">#</th>
+            <th class="th-label px-6 py-2.5 text-start">Processor</th>
+            <th class="th-label px-6 py-2.5 text-start">
               <%= workload&.name %> &middot; <%= version&.label %>
             </th>
-            <th class="eyebrow px-5 py-2.5 text-end text-ink-faint">Compare</th>
+            <th class="th-label px-6 py-2.5 text-end">Compare</th>
           </tr>
         </thead>
         <tbody>
           <% scores.each_with_index do |score, index| %>
             <tr class="border-b border-line-soft last:border-b-0 hover:bg-sunken">
-              <td class="figure px-5 py-3 text-end text-ink-faint"><%= rank_for(index) %></td>
-              <td class="px-5 py-3">
+              <td class="figure px-6 py-3 text-end text-ink-faint"><%= rank_for(index) %></td>
+              <td class="px-6 py-3">
                 <span class="flex items-center gap-2">
                   <%= render VendorDotComponent.new(vendor: score.cpu.vendor) %>
                   <span class="font-medium text-ink"><%= score.cpu.name %></span>
                 </span>
               </td>
-              <td class="px-5 py-3">
+              <td class="px-6 py-3">
                 <%# Value, units, sample count, version, date and source — all
                     of it, on every row. %>
                 <%= render FigureComponent.new(score: score) %>
               </td>
-              <td class="px-5 py-3 text-end">
+              <td class="px-6 py-3 text-end">
                 <% if selected?(score.cpu) %>
                   <span class="eyebrow text-ink-faint">Selected</span>
                 <% elsif full? %>
