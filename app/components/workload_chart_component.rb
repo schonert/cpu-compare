@@ -33,12 +33,4 @@ class WorkloadChartComponent < ApplicationComponent
     ["truncate text-[13px] leading-tight",
      bar.best ? "font-strong text-ink" : "font-normal text-ink-muted"]
   end
-
-  def scale_label
-    max = chart.scale_max
-    return if max.nil?
-
-    precision = max >= 100 ? 0 : 1
-    "0 – #{number_with_precision(max, precision: precision, delimiter: ',')} #{chart.metric_unit}"
-  end
 end

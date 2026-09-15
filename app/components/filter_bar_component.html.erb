@@ -12,6 +12,4 @@
     <%= f.select :vendor, vendor_options, { include_blank: "All vendors" },
           data: { action: "change->autosubmit#submit" }, class: field_classes %>
   <% end %>
-
-  <p class="text-xs text-ink-faint"><%= total_label %></p>
 </div>

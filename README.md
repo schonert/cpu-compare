@@ -230,9 +230,9 @@ everywhere except code and inputs, and tracking that tightens as size grows.
 Headings form a real scale (36px page titles, 16px section titles) instead of
 tracked-out capitals: `.section-title` carries card and section headings in
 sentence case, `.th-label` gives table headers a quiet 12px medium voice, and
-provenance metadata reads in 12px normal case. There is no micro-uppercase
-label style left — kickers are gone entirely and annotations, hints and
-statuses are plain 12px muted text. Flowing text runs at 15px; sections breathe on a 24px rhythm
+provenance metadata reads in 12px normal case. Decorative kickers are gone:
+no “higher is better” badges, processor-count chips, slot hints or
+tracked-out labels. Flowing text runs at 15px; sections breathe on a 24px rhythm
 with generous card padding, while table rows stay dense.
 
 Bars are drawn as upright ticks on a shared pitch by the `ticks` utility —
