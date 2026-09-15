@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Positions a citation tooltip in the viewport so table overflow and card
-// clipping cannot hide it. Shown on hover and keyboard focus; stays open
-// while the pointer or focus moves onto a source link inside the panel.
+// clipping cannot hide it. Shown on hover and keyboard focus; a short hide
+// delay lets the pointer cross the gap onto a source link inside the panel.
 export default class extends Controller {
   static targets = ["panel"]
 
@@ -11,13 +11,17 @@ export default class extends Controller {
   }
 
   disconnect() {
-    window.removeEventListener("scroll", this.boundReposition, true)
-    window.removeEventListener("resize", this.boundReposition)
+    this.cancelHide()
+    this.unlisten()
   }
 
   show() {
-    this.panelTarget.hidden = false
+    this.cancelHide()
+    const panel = this.panelTarget
+    panel.hidden = false
+    panel.style.visibility = "hidden"
     this.reposition()
+    panel.style.visibility = "visible"
     window.addEventListener("scroll", this.boundReposition, true)
     window.addEventListener("resize", this.boundReposition)
   }
@@ -25,7 +29,21 @@ export default class extends Controller {
   hide(event) {
     if (this.element.contains(event.relatedTarget)) return
 
+    this.cancelHide()
+    this.hideTimer = setTimeout(() => this.close(), 180)
+  }
+
+  close() {
     this.panelTarget.hidden = true
+    this.panelTarget.style.visibility = ""
+    this.unlisten()
+  }
+
+  cancelHide() {
+    clearTimeout(this.hideTimer)
+  }
+
+  unlisten() {
     window.removeEventListener("scroll", this.boundReposition, true)
     window.removeEventListener("resize", this.boundReposition)
   }
