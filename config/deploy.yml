@@ -55,8 +55,11 @@ aliases:
   console: app exec --interactive --reuse "bin/rails console"
   shell: app exec --interactive --reuse "bash"
   logs: app logs -f
-  ingest: app exec --reuse "bin/rails ingest:all"
-  ingest-status: app exec --reuse "bin/rails ingest:status"
+  # No --reuse: a fresh container goes through bin/docker-entrypoint, which
+  # drops to the rails user. `docker exec` into the running container would
+  # write to the volume as root.
+  ingest: app exec "bin/rails ingest:all"
+  ingest-status: app exec "bin/rails ingest:status"
 
 # SQLite lives here. Never mount an empty volume over it.
 volumes:
