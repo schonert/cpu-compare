@@ -1,4 +1,4 @@
-<section class="card overflow-hidden">
+<section class="card overflow-hidden" data-controller="browse-selection">
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4">
     <h2 class="eyebrow text-accent">Ranked by workload</h2>
     <div class="flex flex-wrap items-center gap-1">
@@ -48,8 +48,8 @@
                 <% elsif full? %>
                   <span class="eyebrow text-ink-faint">4 max</span>
                 <% else %>
-                  <%= link_to "Add", compare_path_with(score.cpu.slug, selected: selected,
-                                                       version: version&.to_param),
+                  <%= link_to "Add", add_path(score.cpu),
+                              data: { action: "click->browse-selection#add" },
                               class: "rounded-full bg-sunken px-3 py-1 text-[12px] font-medium text-ink hover:bg-ink hover:text-panel" %>
                 <% end %>
               </td>

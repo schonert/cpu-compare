@@ -93,6 +93,44 @@ class SearchTest < ActionDispatch::IntegrationTest
     assert_equal "5950", params["q"]
   end
 
+  # Regression: Add from browse used to link to /compare, dumping the user off
+  # the Browse tab and dropping their filters.
+  test "browse Add links stay on browse and carry the current filters" do
+    get cpus_path(q: "5950", workload: "junkshop")
+
+    assert_response :success
+    href = css_select("[data-controller='browse-selection'] a[data-action*='browse-selection#add']").first&.[]("href")
+    assert href, "expected a browse Add link"
+
+    uri = URI.parse(href)
+    assert_equal "/processors", uri.path
+    params = Rack::Utils.parse_query(uri.query)
+    assert_equal @ryzen.slug, params["cpus"]
+    assert_equal "junkshop", params["workload"]
+    assert_equal "5950", params["q"]
+  end
+
+  test "browse Add appends to the existing selection" do
+    get cpus_path(cpus: @ryzen.slug, q: "13600K")
+
+    href = css_select("[data-controller='browse-selection'] a[data-action*='browse-selection#add']").first["href"]
+    uri = URI.parse(href)
+    params = Rack::Utils.parse_query(uri.query)
+    assert_equal "#{@ryzen.slug},#{@intel.slug}", params["cpus"]
+  end
+
+  test "following a browse Add link updates selection without leaving browse" do
+    get cpus_path(q: "5950", workload: "junkshop")
+    href = css_select("[data-controller='browse-selection'] a[data-action*='browse-selection#add']").first["href"]
+
+    get href
+    assert_response :success
+    assert_match(/AMD Ryzen 9 5950X/, response.body)
+    assert_match(/Selected/, response.body)
+    assert_match(/Ranked by workload/, response.body)
+    refute_match(/Results by workload/, response.body)
+  end
+
   # Regression: the Add links sit inside the results turbo-frame. Without
   # breaking out to _top, Turbo navigated the frame and merely replaced the
   # dropdown with the compare page's own empty search frame — so nothing
