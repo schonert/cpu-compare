@@ -1,10 +1,10 @@
-<section class="card mt-3 overflow-hidden">
-  <div class="border-b border-line px-5 py-4">
-    <h2 class="eyebrow text-accent">Specifications</h2>
+<section class="card mt-6 overflow-hidden">
+  <div class="border-b border-line px-6 py-4">
+    <h2 class="section-title">Specifications</h2>
   </div>
 
   <% if empty? %>
-    <p class="px-5 py-5 text-[13px] leading-relaxed text-ink-muted">
+    <p class="px-6 py-5 text-sm leading-relaxed text-ink-muted">
       No specifications on record for these processors. Core and thread counts are read
       back out of the benchmark runs themselves; everything else comes from Wikidata,
       which covers only a few hundred CPU models. A processor having scores but a thin
@@ -15,9 +15,9 @@
       <table class="w-full border-collapse text-[13px]">
         <thead>
           <tr class="border-b border-line-soft">
-            <th class="eyebrow px-5 py-2.5 text-start text-ink-faint">Specification</th>
+            <th class="th-label px-6 py-2.5 text-start">Specification</th>
             <% cpus.each do |cpu| %>
-              <th class="px-5 py-2.5 text-start font-semibold text-ink">
+              <th class="px-6 py-2.5 text-start font-strong text-ink">
                 <span class="flex items-center gap-2">
                   <%= render VendorDotComponent.new(vendor: cpu.vendor) %>
                   <%= cpu.name %>
@@ -29,16 +29,16 @@
         <tbody>
           <% rows.each do |row| %>
             <tr class="border-b border-line-soft last:border-b-0">
-              <th class="px-5 py-2.5 text-start font-normal text-ink-muted"><%= row.label %></th>
+              <th class="px-6 py-2.5 text-start font-normal text-ink-muted"><%= row.label %></th>
               <% cpus.each do |cpu| %>
-                <td class="px-5 py-2.5 align-top"
+                <td class="px-6 py-2.5 align-top"
                     data-cpu-slug="<%= cpu.slug %>"
                     data-compare-highlight-target="item">
                   <% if (label = source_label(row, cpu)) %>
                     <span class="relative inline-flex"
                           data-controller="tooltip"
                           data-action="mouseenter->tooltip#show mouseleave->tooltip#hide focusin->tooltip#show focusout->tooltip#hide">
-                      <span class="figure cursor-help font-semibold text-ink decoration-dotted decoration-ink-faint underline underline-offset-4"
+                      <span class="figure cursor-help font-strong text-ink decoration-dotted decoration-ink-faint underline underline-offset-4"
                             tabindex="0"
                             aria-describedby="<%= tooltip_id(row, cpu) %>-label">
                         <%= cell_value(row, cpu) %>
@@ -51,7 +51,7 @@
                             role="tooltip"
                             hidden
                             data-tooltip-target="panel">
-                        <span class="eyebrow flex flex-col gap-0.5 text-ink">
+                        <span class="flex flex-col gap-0.5 text-xs text-ink">
                           <% if (url = source_url(row, cpu)) %>
                             <%= link_to label, url, class: "hover:text-accent underline underline-offset-2",
                                         rel: "noopener", target: "_blank" %>
@@ -65,7 +65,7 @@
                       </span>
                     </span>
                   <% else %>
-                    <span class="figure font-semibold text-ink"><%= cell_value(row, cpu) %></span>
+                    <span class="figure font-strong text-ink"><%= cell_value(row, cpu) %></span>
                   <% end %>
                 </td>
               <% end %>

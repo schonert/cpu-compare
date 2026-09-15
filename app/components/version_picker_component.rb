@@ -22,7 +22,7 @@ class VersionPickerComponent < ApplicationComponent
   def path_for(version) = @path.call(version)
 
   def classes(version)
-    ["rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
-     current?(version) ? "bg-ink text-panel" : "text-ink-muted hover:bg-sunken hover:text-ink"]
+    ["rounded-md px-3 py-1 text-[12px] font-medium transition-colors",
+     current?(version) ? "bg-ink text-panel" : "text-ink-muted hover:bg-hover hover:text-ink"]
   end
 end

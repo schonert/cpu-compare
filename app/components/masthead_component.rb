@@ -21,9 +21,9 @@ class MastheadComponent < ApplicationComponent
   def current?(key) = key == mode
 
   # Segmented control: a solid ink pill marks the current view against the
-  # white track, rather than white-on-white with a shadow.
+  # recessed track. Inactive items are ghost buttons that fill on hover.
   def tab_classes(key)
-    base = "rounded-full px-4 py-1.5 text-[13px] font-medium transition"
-    current?(key) ? "#{base} bg-ink text-panel" : "#{base} text-ink-muted hover:text-ink"
+    base = "rounded-md px-4 py-1.5 text-[13px] font-emphasis transition"
+    current?(key) ? "#{base} bg-ink text-panel" : "#{base} text-ink-muted hover:bg-hover hover:text-ink"
   end
 end

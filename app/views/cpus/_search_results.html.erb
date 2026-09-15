@@ -1,6 +1,6 @@
 <%= turbo_frame_tag CpuSearchComponent::FRAME_ID do %>
   <% if query.present? && query.length >= 2 %>
-    <ul class="mt-2 divide-y divide-line-soft overflow-hidden rounded-xl bg-panel">
+    <ul class="mt-2 divide-y divide-line-soft overflow-hidden rounded-lg bg-panel shadow-menu">
       <% results.each do |cpu| %>
         <li>
           <%# These links live inside the results frame, so without breaking out
@@ -13,7 +13,6 @@
               <%= render VendorDotComponent.new(vendor: cpu.vendor) %>
               <span class="truncate font-medium text-ink"><%= cpu.name %></span>
             </span>
-            <span class="eyebrow shrink-0 text-ink-faint">Add</span>
           <% end %>
         </li>
       <% end %>

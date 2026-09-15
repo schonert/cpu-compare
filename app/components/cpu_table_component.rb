@@ -27,8 +27,8 @@ class CpuTableComponent < ApplicationComponent
   def current_workload?(candidate) = workload.present? && candidate.id == workload.id
 
   def tab_classes(candidate)
-    ["rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
-     current_workload?(candidate) ? "bg-ink text-panel" : "text-ink-muted hover:bg-sunken hover:text-ink"]
+    ["rounded-md px-3 py-1 text-[12px] font-medium transition-colors",
+     current_workload?(candidate) ? "bg-ink text-panel" : "text-ink-muted hover:bg-hover hover:text-ink"]
   end
 
   def selected?(cpu) = selected.include?(cpu.slug)

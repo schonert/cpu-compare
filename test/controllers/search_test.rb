@@ -51,10 +51,14 @@ class SearchTest < ActionDispatch::IntegrationTest
 
   test "the filtered count reflects the search, not the whole catalogue" do
     get cpus_path(q: "5950")
-    assert_match(/1 processor\b/, response.body)
+    assert_match(/AMD Ryzen 9 5950X/, response.body)
+    refute_match(/Intel Core i5-13600K/, response.body)
+    refute_match(/AMD EPYC 9755/, response.body)
 
     get cpus_path
-    assert_match(/3 processors/, response.body)
+    assert_match(/AMD Ryzen 9 5950X/, response.body)
+    assert_match(/Intel Core i5-13600K/, response.body)
+    assert_match(/AMD EPYC 9755/, response.body)
   end
 
   # Regression: the filter form carried no workload, so searching silently
@@ -126,8 +130,8 @@ class SearchTest < ActionDispatch::IntegrationTest
     get href
     assert_response :success
     assert_match(/AMD Ryzen 9 5950X/, response.body)
-    assert_match(/Selected/, response.body)
     assert_match(/Ranked by workload/, response.body)
+    assert_select "[data-controller='browse-selection'] a[data-action*='browse-selection#add']", count: 0
     refute_match(/Results by workload/, response.body)
   end
 

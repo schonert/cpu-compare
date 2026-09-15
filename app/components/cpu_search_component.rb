@@ -13,7 +13,5 @@ class CpuSearchComponent < ApplicationComponent
 
   def disabled? = @disabled
 
-  def placeholder
-    disabled? ? "Four slots filled — remove one to swap it out" : "Search #{number_with_delimiter(Catalogue.size)} processors"
-  end
+  def placeholder = "Search processors"
 end

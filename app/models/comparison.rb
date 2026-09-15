@@ -119,10 +119,6 @@ class Comparison
     def higher_is_better? = version.higher_is_better
     def scale_max = @scale_max
 
-    def direction_note
-      higher_is_better? ? "Higher is better" : "Lower is better — the bar shows time taken"
-    end
-
     private
 
     def best_of(scores)

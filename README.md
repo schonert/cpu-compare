@@ -215,22 +215,41 @@ yet**; their specs can be entered against those sources by hand meanwhile.
 ## Styling
 
 Tailwind CSS 4, with design tokens in `app/assets/tailwind/application.css`.
-White cards on a light ground, generous radii, oversized figures and tiny
-uppercase labels. Bars are drawn as upright ticks on a shared pitch by the
-`ticks` utility — the track and the filled portion use the same gradient, so
-their ticks land on one alignment grid. Names sit in a fixed first column so
-every bar starts at the same x-position and lengths read against each other
-directly; each figure's provenance sits under its bar rather than in the value
-column, which is what keeps that alignment.
+Two design languages share the file, each referenced verbatim in the repo:
+the Vercel palette, depth and focus in `DESIGN.md`, and the Linear type and
+spacing discipline in `linear.app/DESIGN.md`.
 
-Because the name column already identifies each row, bars stay monochrome and a
-single orange accent marks the leader. Colour is never the only carrier of
-meaning — the leading value is also bold, and every figure is printed next to
-its bar.
+The canvas is achromatic (`#FAFAFA` ground, `#171717` text) with white cards
+at 8px radii whose boundaries are shadows rather than CSS borders, 6px radii
+on functional controls, and a single interactive blue (`#0072F5`) used only
+for links, focus rings and active states. Focus uses the double-ring pattern.
 
-Set in Inter. There is no monospace font anywhere: Tailwind's `--font-mono`
-token is redefined to the sans stack. Lining figures come from the `.figure`
-class rather than from `body`, since tabular figures widen the hyphen.
+Typography is Inter Variable with Linear's in-between weights — 510 for
+emphasis, 590 for strong emphasis, nothing heavier — plus `cv01`/`ss03`
+everywhere except code and inputs, and tracking that tightens as size grows.
+Headings form a real scale (36px page titles, 16px section titles) instead of
+tracked-out capitals: `.section-title` carries card and section headings in
+sentence case, `.th-label` gives table headers a quiet 12px medium voice, and
+provenance metadata reads in 12px normal case. Decorative kickers are gone:
+no “higher is better” badges, processor-count chips, slot hints or
+tracked-out labels. Flowing text runs at 15px; sections breathe on a 24px rhythm
+with generous card padding, while table rows stay dense.
+
+Bars are drawn as upright ticks on a shared pitch by the `ticks` utility —
+the track and the filled portion use the same gradient, so their ticks land
+on one alignment grid. Names sit in a fixed first column so every bar starts
+at the same x-position and lengths read against each other directly; each
+figure's provenance sits under its bar rather than in the value column, which
+is what keeps that alignment.
+
+Because the name column already identifies each row, bars stay monochrome for
+every row and the leader is marked by weight. Colour is never the only
+carrier of meaning — the leading value is strong, and every figure is
+printed next to its bar. Vendor identity lives in the small status dots,
+the one place chromatic color appears, at dot scale.
+
+Lining figures come from the `.figure` class rather than from `body`, since
+tabular figures widen the hyphen.
 
 ## Tests
 

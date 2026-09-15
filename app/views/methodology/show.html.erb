@@ -1,10 +1,9 @@
 <% content_for :title, "Methodology" %>
 
 <article class="card overflow-hidden">
-  <div class="border-b border-line px-5 py-5">
-    <p class="eyebrow mb-2 text-accent">How these numbers are made</p>
-    <h1 class="text-2xl font-bold tracking-tight">Methodology</h1>
-    <p class="mt-2 max-w-[62ch] text-sm text-ink-muted">
+  <div class="border-b border-line px-6 py-6">
+    <h1 class="text-3xl font-strong">Methodology</h1>
+    <p class="mt-2 max-w-[62ch] text-[15px] leading-relaxed text-ink-muted">
       Every figure on this site is a median of public benchmark submissions for one
       processor, on one scene, within one major version of one benchmark. Nothing is
       blended across scenes or across versions, and every figure links to the runs it
@@ -12,9 +11,9 @@
     </p>
   </div>
 
-  <section class="border-t border-line px-5 py-5">
-    <h2 class="eyebrow mb-3 text-accent">Measurement protocol</h2>
-    <p class="max-w-[68ch] text-[13px] leading-relaxed text-ink-muted"><%= @suite&.protocol %></p>
+  <section class="border-t border-line px-6 py-6">
+    <h2 class="section-title mb-3">Measurement protocol</h2>
+    <p class="max-w-[68ch] text-[15px] leading-relaxed text-ink-muted"><%= @suite&.protocol %></p>
     <% if @suite&.protocol_url %>
       <p class="mt-2">
         <%= link_to "Benchmark documentation", @suite.protocol_url,
@@ -24,14 +23,14 @@
     <% end %>
   </section>
 
-  <section class="border-t border-line px-5 py-5">
-    <h2 class="eyebrow mb-3 text-accent">Benchmark series are never combined</h2>
+  <section class="border-t border-line px-6 py-6">
+    <h2 class="section-title mb-3">Benchmark series are never combined</h2>
     <div class="overflow-x-auto">
       <table class="w-full border-collapse text-[13px]">
         <thead>
           <tr class="border-b border-line-soft">
             <% %w[Series Metric Unit Direction].each do |head| %>
-              <th class="eyebrow px-0 py-2 pe-5 text-start text-ink-faint"><%= head %></th>
+              <th class="th-label px-0 py-2 pe-5 text-start"><%= head %></th>
             <% end %>
           </tr>
         </thead>
@@ -51,13 +50,13 @@
     </div>
   </section>
 
-  <section class="border-t border-line px-5 py-5">
-    <h2 class="eyebrow mb-3 text-accent">Sources</h2>
+  <section class="border-t border-line px-6 py-6">
+    <h2 class="section-title mb-3">Sources</h2>
     <ul class="space-y-3">
       <% @sources.each do |source| %>
         <li class="text-[13px]">
           <span class="flex flex-wrap items-baseline gap-x-2">
-            <span class="font-semibold text-ink">
+            <span class="font-strong text-ink">
               <% if source.url %>
                 <%= link_to source.name, source.url, class: "underline underline-offset-2",
                             rel: "noopener", target: "_blank" %>
@@ -65,11 +64,9 @@
                 <%= source.name %>
               <% end %>
             </span>
-            <span class="eyebrow text-ink-faint"><%= source.license %></span>
+            <span class="text-xs text-ink-faint"><%= source.license %></span>
             <% if source.licensed? %>
-              <span class="eyebrow rounded-full bg-accent-soft px-2 py-0.5 text-accent">Licensed — not ingested</span>
-            <% elsif source.redistributable? %>
-              <span class="eyebrow text-ink-faint">Redistributable</span>
+              <span class="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent">Licensed — not ingested</span>
             <% end %>
           </span>
           <p class="mt-0.5 max-w-[68ch] text-ink-muted"><%= source.notes %></p>
@@ -78,8 +75,8 @@
     </ul>
   </section>
 
-  <section class="border-t border-line px-5 py-5">
-    <h2 class="eyebrow mb-3 text-accent">Coverage</h2>
+  <section class="border-t border-line px-6 py-6">
+    <h2 class="section-title mb-3">Coverage</h2>
     <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-[13px] sm:grid-cols-3">
       <% [["Processors", @coverage[:processors]],
           ["With a published figure", @coverage[:displayable]],
@@ -88,8 +85,8 @@
           ["Scores computed", @coverage[:scores]],
           ["Suppressed below N=#{@config.min_samples}", @coverage[:suppressed]]].each do |label, value| %>
         <div>
-          <dt class="eyebrow text-ink-faint"><%= label %></dt>
-          <dd class="figure mt-0.5 text-lg font-semibold text-ink"><%= number_with_delimiter(value) %></dd>
+          <dt class="th-label"><%= label %></dt>
+          <dd class="figure mt-0.5 text-lg font-strong text-ink"><%= number_with_delimiter(value) %></dd>
         </div>
       <% end %>
     </dl>
@@ -103,9 +100,9 @@
     <% end %>
   </section>
 
-  <section class="border-t border-line px-5 py-5">
-    <h2 class="eyebrow mb-1 text-accent">Scoring rules</h2>
-    <p class="mb-3 max-w-[68ch] text-[13px] text-ink-muted">
+  <section class="border-t border-line px-6 py-6">
+    <h2 class="section-title mb-2">Scoring rules</h2>
+    <p class="mb-3 max-w-[68ch] text-sm text-ink-muted">
       This is <code>config/scoring.yml</code>, rendered exactly as the application reads
       it. Version <%= @config.version %>.
       <% if @config.composites? %>
@@ -116,17 +113,17 @@
         than blended into one number.
       <% end %>
     </p>
-    <pre class="overflow-x-auto rounded-xl bg-sunken px-4 py-4 text-[12px] leading-relaxed text-ink-muted"><%= @config.source_text %></pre>
+    <pre class="overflow-x-auto rounded bg-sunken px-4 py-4 text-[12px] leading-relaxed text-ink-muted"><%= @config.source_text %></pre>
   </section>
 
-  <section class="border-t border-line px-5 py-5">
-    <h2 class="eyebrow mb-3 text-accent">Ingest history</h2>
+  <section class="border-t border-line px-6 py-6">
+    <h2 class="section-title mb-3">Ingest history</h2>
     <div class="overflow-x-auto">
       <table class="w-full border-collapse text-[13px]">
         <thead>
           <tr class="border-b border-line-soft">
             <% ["Run", "Status", "Started", "Snapshot", "Checksum"].each do |head| %>
-              <th class="eyebrow px-0 py-2 pe-5 text-start text-ink-faint"><%= head %></th>
+              <th class="th-label px-0 py-2 pe-5 text-start"><%= head %></th>
             <% end %>
           </tr>
         </thead>

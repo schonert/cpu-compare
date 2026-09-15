@@ -1,7 +1,7 @@
 # The small coloured dot that identifies a CPU's vendor at a glance.
 #
-# Bars are monochrome so the accent can mark the leader, which leaves the dot
-# as the place vendor identity lives.
+# Bars are monochrome for every row, so the dot is the place vendor identity
+# lives — status color at dot scale, as DESIGN.md requires.
 class VendorDotComponent < ApplicationComponent
   def initialize(vendor:, size: :sm)
     @vendor = vendor
