@@ -1,4 +1,5 @@
 require "digest"
+require "open-uri"
 require "zip"
 
 module BlenderOpenData
