@@ -33,8 +33,10 @@ class Comparison
     @workload_charts ||= begin
       return [] if version.nil? || cpus.empty?
 
-      scores = BenchmarkScore.displayable
-                             .where(cpu_id: cpus.map(&:id), benchmark_version: version)
+      # Unpublished (too few samples) scores still draw as faded bars, so load
+      # them alongside the published figures. A chart is only shown when at
+      # least one published bar is present.
+      scores = BenchmarkScore.where(cpu_id: cpus.map(&:id), benchmark_version: version)
                              .index_by { |s| [s.cpu_id, s.workload_id] }
 
       version.scored_workloads.filter_map do |workload|
@@ -94,6 +96,8 @@ class Comparison
   class WorkloadChart
     Bar = Struct.new(:cpu, :score, :percent, :best, keyword_init: true) do
       def missing? = score.nil?
+      def unpublished? = score.present? && score.suppressed?
+      def published? = score.present? && !score.suppressed?
     end
 
     attr_reader :workload, :version, :bars
@@ -102,19 +106,21 @@ class Comparison
       @workload = workload
       @version = version
       present = cpus.filter_map { |cpu| scores[[cpu.id, workload.id]] }
-      @best = best_of(present)
+      published = present.reject(&:suppressed?)
+      @best = best_of(published)
       # Computed across every bar before any is scaled, so all bars on one
-      # chart share a single scale.
+      # chart share a single scale — including unpublished figures, so a
+      # faded bar still reads against the same axis.
       @scale_max = present.map { |score| score.median.to_f }.max
 
       @bars = cpus.map do |cpu|
         score = scores[[cpu.id, workload.id]]
         Bar.new(cpu: cpu, score: score, percent: percent_for(score),
-                best: score.present? && @best.present? && score.id == @best.id)
+                best: score.present? && !score.suppressed? && @best.present? && score.id == @best.id)
       end
     end
 
-    def render? = bars.any? { |bar| !bar.missing? }
+    def render? = bars.any?(&:published?)
     def metric_unit = version.metric_unit
     def higher_is_better? = version.higher_is_better
     def scale_max = @scale_max

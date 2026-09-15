@@ -22,7 +22,13 @@ class WorkloadChartComponent < ApplicationComponent
   def bars = chart.bars
   def workload = chart.workload
 
-  def tick_ink(_bar) = "text-ink"
+  def row_classes(bar)
+    ["grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4",
+     "transition-opacity duration-150 sm:grid-cols-[13rem_minmax(0,1fr)_8rem]",
+     ("opacity-40" if bar.unpublished? || bar.missing?)]
+  end
+
+  def tick_ink(bar) = bar.best ? "text-accent" : "text-ink"
 
   def value_classes(bar)
     ["figure shrink-0 text-end text-sm leading-none",

@@ -6,8 +6,7 @@
       <%# Name, bar and value on one row. Keeping the value out of the bar
           column is what lets every bar start and end on the same x-positions,
           so their lengths can be read against each other. %>
-      <li class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4
-                 transition-opacity duration-150 sm:grid-cols-[13rem_minmax(0,1fr)_8rem]"
+      <li class="<%= class_names(row_classes(bar)) %>"
           data-cpu-slug="<%= bar.cpu.slug %>"
           data-compare-highlight-target="item"
           data-action="mouseenter->compare-highlight#highlight mouseleave->compare-highlight#clear focus->compare-highlight#highlight blur->compare-highlight#clear"
@@ -38,6 +37,7 @@
             <%= link_to score_value(bar.score), measurements_path(bar.score),
                         class: "underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent",
                         title: "See the runs behind this figure" %>
+                        title: bar.unpublished? ? "Too few runs to publish — see the runs behind this figure" : "See the runs behind this figure" %>
           </span>
         <% end %>
       </li>
