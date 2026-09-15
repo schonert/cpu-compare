@@ -31,7 +31,10 @@
 
   <div class="card mt-3 px-5 py-4">
     <%= render VersionPickerComponent.new(versions: @comparison.versions, current: @version,
-                                          selected: @comparison.slugs) %>
+                                          path: ->(version) {
+                                            compare_path_for_version(version.to_param,
+                                                                     selected: @comparison.slugs)
+                                          }) %>
   </div>
 
   <div data-controller="compare-highlight">

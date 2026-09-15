@@ -73,6 +73,26 @@ class SearchTest < ActionDispatch::IntegrationTest
     assert_select "a[href*=?]", "q=AMD"
   end
 
+  # Regression: the version picker always linked to /compare, so switching
+  # series on Browse dumped the user onto the Compare tab.
+  test "the browse benchmark switcher stays on browse" do
+    5.times { create_submission(cpu: @ryzen, value: 900, series: "5") }
+    Scoring::Aggregator.call
+    Rails.cache.clear
+
+    get cpus_path(q: "5950", workload: "junkshop")
+
+    assert_response :success
+    href = css_select("a").find { |a| a.text.strip == "Blender 5.x" }&.[]("href")
+    assert href, "expected a Blender 5.x switcher link on browse"
+    uri = URI.parse(href)
+    assert_equal "/processors", uri.path
+    params = Rack::Utils.parse_query(uri.query)
+    assert_equal "blender-5", params["version"]
+    assert_equal "junkshop", params["workload"]
+    assert_equal "5950", params["q"]
+  end
+
   # Regression: the Add links sit inside the results turbo-frame. Without
   # breaking out to _top, Turbo navigated the frame and merely replaced the
   # dropdown with the compare page's own empty search frame — so nothing
