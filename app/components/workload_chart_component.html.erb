@@ -9,46 +9,35 @@
 
   <ul class="space-y-3">
     <% bars.each do |bar| %>
-      <%# Two rows per bar: name, bar and value on the first; the figure's
-          provenance on the second, under the bar. Keeping the provenance out
-          of the value column is what lets every bar start and end on the same
-          x-positions, so their lengths can be read against each other. %>
-      <li class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1.5
-                 transition-opacity duration-150 sm:grid-cols-[13rem_minmax(0,1fr)_8rem]"
+      <%# Name, bar and value on one row. Keeping the value out of the bar
+          column is what lets every bar start and end on the same x-positions,
+          so their lengths can be read against each other. %>
+      <li class="<%= class_names(row_classes(bar)) %>"
           data-cpu-slug="<%= bar.cpu.slug %>"
           data-compare-highlight-target="item"
           data-action="mouseenter->compare-highlight#highlight mouseleave->compare-highlight#clear focus->compare-highlight#highlight blur->compare-highlight#clear"
           tabindex="0">
-        <span class="flex min-w-0 items-center gap-2 sm:row-start-1">
+        <span class="flex min-w-0 items-center gap-2">
           <%= render VendorDotComponent.new(vendor: bar.cpu.vendor) %>
           <span class="<%= class_names(name_classes(bar)) %>" title="<%= bar.cpu.name %>">
             <%= bar.cpu.name %>
           </span>
         </span>
 
-        <% if bar.missing? %>
-          <%# Said plainly rather than drawn as a zero-length bar: no figure
-              means too few runs to publish, not a slow chip. %>
-          <span class="eyebrow col-span-2 text-ink-faint sm:col-span-2 sm:col-start-2 sm:row-start-1">
-            Fewer than <%= Scoring::Config.current.min_samples %> runs on record — not published
-          </span>
-        <% else %>
-          <%# Track and fill share one tick grid, so filled ticks land exactly
-              on the empty ones and the bar reads as a scale, not a smear. %>
-          <div class="relative order-last col-span-2 h-5 sm:order-none sm:col-span-1 sm:col-start-2 sm:row-start-1">
-            <div class="ticks absolute inset-0 text-track" aria-hidden="true"></div>
-            <div class="ticks absolute inset-y-0 start-0 <%= tick_ink(bar) %>"
-                 style="width: <%= bar.percent %>%" aria-hidden="true"></div>
-          </div>
+        <%# Track and fill share one tick grid, so filled ticks land exactly
+            on the empty ones and the bar reads as a scale, not a smear.
+            Unpublished figures (too few runs) keep the same bar, faded. %>
+        <div class="relative order-last col-span-2 h-5 sm:order-none sm:col-span-1 sm:col-start-2">
+          <div class="ticks absolute inset-0 text-track" aria-hidden="true"></div>
+          <div class="ticks absolute inset-y-0 start-0 <%= tick_ink(bar) %>"
+               style="width: <%= bar.percent %>%" aria-hidden="true"></div>
+        </div>
 
-          <span class="<%= class_names(value_classes(bar)) %> sm:col-start-3 sm:row-start-1">
+        <% if bar.score %>
+          <span class="<%= class_names(value_classes(bar)) %> sm:col-start-3">
             <%= link_to score_value(bar.score), measurements_path(bar.score),
                         class: "underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent",
-                        title: "See the runs behind this figure" %>
-          </span>
-
-          <span class="col-span-2 sm:col-span-2 sm:col-start-2 sm:row-start-2">
-            <%= render FigureMetaComponent.new(score: bar.score, show_source: false) %>
+                        title: bar.unpublished? ? "Too few runs to publish — see the runs behind this figure" : "See the runs behind this figure" %>
           </span>
         <% end %>
       </li>

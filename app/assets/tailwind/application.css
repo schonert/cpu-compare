@@ -104,4 +104,20 @@
     background-color: var(--color-panel);
     border-radius: 1rem;
   }
+
+  /* Sourced spec values hide their citation until hover or focus. Fixed
+     positioning is applied by the tooltip controller so table overflow and
+     the card's rounded clip cannot hide the panel. */
+  .tip {
+    display: block;
+    position: fixed;
+    z-index: 50;
+    width: max-content;
+    max-width: 16rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-line);
+    background-color: var(--color-panel);
+    padding: 0.4rem 0.65rem;
+    box-shadow: 0 8px 24px rgb(10 10 11 / 12%);
+  }
 }

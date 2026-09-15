@@ -3,9 +3,8 @@
 # was last measured, and where it came from.
 #
 # Split out from FigureComponent so a caller can place the figure and its
-# provenance in different grid cells — the bar charts need the value beside the
-# bar and the provenance beneath it — without either being able to render the
-# number on its own.
+# provenance separately without either being able to render the number on its
+# own.
 class FigureMetaComponent < ApplicationComponent
   def initialize(score:, show_source: true)
     @score = score
