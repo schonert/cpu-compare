@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+mkdir -p /workspace/data /rails/storage /rails/tmp /rails/log
+
+if [ "$(id -u)" = "0" ]; then
+  chown -R rails:rails /workspace/data /rails/storage /rails/tmp /rails/log 2>/dev/null || true
+fi
+
+# SECRET_KEY_BASE lives on the persistent volume so no master key has to be
+# handed to CI. Generated once, on first boot.
+if [ -z "${SECRET_KEY_BASE:-}" ] && [ -z "${RAILS_MASTER_KEY:-}" ]; then
+  keyfile="/workspace/data/secret_key_base"
+  if [ ! -f "$keyfile" ]; then
+    openssl rand -hex 64 > "$keyfile"
+  fi
+  if [ "$(id -u)" = "0" ]; then
+    chown rails:rails "$keyfile" 2>/dev/null || true
+    chmod 600 "$keyfile" 2>/dev/null || true
+  fi
+  export SECRET_KEY_BASE="$(cat "$keyfile")"
+fi
+
+# Incomplete SQLite files left by image-time `assets:precompile` make db:prepare
+# skip the schema load, after which Solid Queue crashes and takes Puma with it.
+rm -f /rails/storage/*.sqlite3 /rails/storage/*.sqlite3-*
+
+if [ "${1}" = "./bin/rails" ] && [ "${2}" = "server" ]; then
+  if [ "$(id -u)" = "0" ] && runuser -u rails -- test -w /workspace/data 2>/dev/null; then
+    runuser -u rails -- ./bin/rails db:prepare
+  else
+    ./bin/rails db:prepare
+  fi
+fi
+
+if [ "$(id -u)" = "0" ] && runuser -u rails -- test -w /workspace/data 2>/dev/null; then
+  exec runuser -u rails -- "$@"
+fi
+
+exec "${@}"

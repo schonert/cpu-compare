@@ -1,0 +1,71 @@
+# Kamal deploy for cpu-compare on m710q.
+#
+# Sibling of dba-index on the same host. kamal-proxy is already running there
+# bound to 127.0.0.1:20000/20001 and routes by Host header, so this app needs
+# no new ports — only its own hostname on the existing Cloudflare tunnel:
+#
+#   i1flsn2d4u.vasketid.nu -> http://localhost:20000 -> this app :3000
+#
+# OpenShip owns host 80/443 (dashboard + edge); do not take those ports.
+
+service: cpu-compare
+image: cpu-compare
+
+servers:
+  web:
+    - m710q
+
+ssh:
+  user: stefan
+  keys:
+    - ~/.ssh/id_ed25519
+
+proxy:
+  ssl: false
+  host: i1flsn2d4u.vasketid.nu
+  app_port: 3000
+  forward_headers: true
+  healthcheck:
+    path: /up
+    interval: 2
+    timeout: 5
+  # Must match what dba-index booted the shared proxy with.
+  run:
+    http_port: 20000
+    https_port: 20001
+    bind_ips:
+      - 127.0.0.1
+
+# Kamal's local registry: a registry:3 container on the builder, reverse
+# tunnelled to the server over SSH. Nothing is pushed off the LAN.
+registry:
+  server: localhost:5555
+
+env:
+  clear:
+    RAILS_ENV: production
+    RAILS_LOG_TO_STDOUT: "1"
+    PORT: "3000"
+    DB_PATH: /workspace/data/production.sqlite3
+    SOLID_QUEUE_IN_PUMA: "1"
+    JOB_CONCURRENCY: "1"
+    RAILS_MAX_THREADS: "5"
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  ingest: app exec --reuse "bin/rails ingest:all"
+  ingest-status: app exec --reuse "bin/rails ingest:status"
+
+# SQLite lives here. Never mount an empty volume over it.
+volumes:
+  - "cpu-compare-data:/workspace/data"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64
+
+# First boot runs db:prepare, which loads the schema and seeds the catalogue.
+deploy_timeout: 180

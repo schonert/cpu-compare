@@ -1,0 +1,54 @@
+# Continuous deployment to m710q.
+#
+# Runs on the self-hosted runner on m70s — the same box that hosts Kamal's
+# local registry and the buildx builder, and the only machine with a
+# non-interactive SSH path to m710q. Deliberately `push` to main only: this
+# repository is public, and a self-hosted runner must never execute code from
+# a fork's pull request.
+
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: cpu-compare-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, m70s]
+    timeout-minutes: 45
+    env:
+      HOME: /home/stefan
+      PATH: /home/stefan/.local/share/mise/shims:/home/stefan/.local/bin:/usr/local/bin:/usr/bin:/bin
+      PUBLIC_ORIGIN: https://i1flsn2d4u.vasketid.nu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Show toolchain
+        run: |
+          kamal version
+          docker version --format 'docker {{.Server.Version}}'
+
+      - name: Kamal deploy
+        run: kamal deploy --lock-wait --lock-wait-timeout 900
+
+      - name: Verify public origin
+        run: |
+          code="$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 30 "${PUBLIC_ORIGIN}/up")"
+          test "$code" = "200" || { echo "GET /up returned ${code}" >&2; exit 1; }
+          curl -fsS -o /dev/null --max-time 30 "${PUBLIC_ORIGIN}/"
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          {
+            echo "### cpu-compare"
+            echo
+            echo "- commit: \`${GITHUB_SHA}\`"
+            echo "- origin: ${PUBLIC_ORIGIN}"
+          } >> "$GITHUB_STEP_SUMMARY"
