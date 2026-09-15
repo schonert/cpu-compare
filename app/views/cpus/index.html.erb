@@ -8,7 +8,11 @@
 
 <div class="card mt-3 px-5 py-4">
   <%= render VersionPickerComponent.new(versions: Catalogue.versions, current: @version,
-                                        selected: @selected) %>
+                                        path: ->(version) {
+                                          cpus_path(@filters.merge(
+                                            version: version.to_param, workload: @workload&.key,
+                                            cpus: @selected.join(",").presence).compact)
+                                        }) %>
 </div>
 
 <div class="mt-3">

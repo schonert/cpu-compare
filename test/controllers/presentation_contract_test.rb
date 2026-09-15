@@ -146,4 +146,16 @@ class PresentationContractTest < ActionDispatch::IntegrationTest
     # The 4.x figure must not appear on the 5.x view.
     refute_match(/20[0-5]\.\d samples\/min/, response.body)
   end
+
+  test "the compare benchmark switcher stays on compare" do
+    5.times { create_submission(cpu: @fast, value: 900, series: "5") }
+    Scoring::Aggregator.call
+    Rails.cache.clear
+
+    get compare_path(cpus: @fast.slug)
+
+    assert_select "a", text: "Blender 5.x" do |links|
+      assert_equal compare_path(cpus: @fast.slug, version: "blender-5"), links.first["href"]
+    end
+  end
 end
