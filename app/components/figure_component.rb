@@ -24,7 +24,7 @@ class FigureComponent < ApplicationComponent
   end
 
   def value_classes
-    ["figure font-semibold leading-none text-ink", @size == :lg ? "text-2xl" : "text-sm"]
+    ["figure font-strong leading-none text-ink", @size == :lg ? "text-2xl" : "text-sm"]
   end
 
   def measurements_path = helpers.measurements_path(score)

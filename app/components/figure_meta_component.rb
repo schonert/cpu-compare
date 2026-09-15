@@ -41,7 +41,7 @@ class FigureMetaComponent < ApplicationComponent
   def source_name = score.benchmark_version.benchmark_suite.source.name
 
   def call
-    tag.span(class: "eyebrow flex flex-wrap items-center gap-x-2 gap-y-0.5 text-ink-faint") do
+    tag.span(class: "flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-ink-muted") do
       safe_join(items.map { |item| tag.span(item) })
     end
   end

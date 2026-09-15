@@ -3,7 +3,7 @@
     <span class="text-sm text-ink-faint">Nothing selected yet — search above to add a processor.</span>
   <% else %>
     <% comparison.cpus.each do |cpu| %>
-      <span class="inline-flex items-center gap-2 rounded-full bg-panel py-1.5 ps-3.5 pe-2 text-[13px]
+      <span class="chip inline-flex items-center gap-2 py-1.5 ps-3.5 pe-2 text-[13px]
                    font-medium transition-opacity duration-150"
             data-cpu-slug="<%= cpu.slug %>"
             data-compare-highlight-target="item"
@@ -17,9 +17,6 @@
           &times;
         <% end %>
       </span>
-    <% end %>
-    <% if slot_hint %>
-      <span class="eyebrow text-ink-faint"><%= slot_hint %></span>
     <% end %>
   <% end %>
 </div>

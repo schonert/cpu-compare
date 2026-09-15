@@ -3,10 +3,9 @@
 <% @selected_slugs = @selected %>
 
 <%= render FilterBarComponent.new(filters: @filters, selected: @selected,
-                                  version: @version&.to_param, workload: @workload&.key,
-                                  total: @total) %>
+                                  version: @version&.to_param, workload: @workload&.key) %>
 
-<div class="card mt-3 px-5 py-4">
+<div class="card mt-6 px-6 py-5">
   <%= render VersionPickerComponent.new(versions: Catalogue.versions, current: @version,
                                         path: ->(version) {
                                           cpus_path(@filters.merge(
@@ -15,7 +14,7 @@
                                         }) %>
 </div>
 
-<div class="mt-3">
+<div class="mt-6">
   <%= render CpuTableComponent.new(scores: @scores, version: @version, workload: @workload,
                                    filters: @filters, selected: @selected,
                                    offset: (@page - 1) * CpusController::PER_PAGE) %>
