@@ -1,0 +1,24 @@
+<% @mode = "browse" %>
+<% content_for :title, "Browse processors" %>
+<% @selected_slugs = @selected %>
+
+<%= render FilterBarComponent.new(filters: @filters, selected: @selected,
+                                  version: @version&.to_param, workload: @workload&.key,
+                                  total: @total) %>
+
+<div class="card mt-3 px-5 py-4">
+  <%= render VersionPickerComponent.new(versions: Catalogue.versions, current: @version,
+                                        selected: @selected) %>
+</div>
+
+<div class="mt-3">
+  <%= render CpuTableComponent.new(scores: @scores, version: @version, workload: @workload,
+                                   filters: @filters, selected: @selected,
+                                   offset: (@page - 1) * CpusController::PER_PAGE) %>
+</div>
+
+<%= render PaginationComponent.new(page: @page, total: @total, per_page: CpusController::PER_PAGE,
+                                   path: ->(page) { cpus_path(@filters.merge(
+                                     page: page, version: @version&.to_param,
+                                     workload: @workload&.key,
+                                     cpus: @selected.join(",").presence).compact) }) %>

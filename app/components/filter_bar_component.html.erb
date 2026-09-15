@@ -1,0 +1,17 @@
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <%= form_with url: cpus_path, method: :get, data: { controller: "autosubmit" },
+                class: "flex flex-wrap items-center gap-2" do |f| %>
+    <%= f.hidden_field :cpus, value: selected.join(","), id: "filter_cpus" %>
+    <%= f.hidden_field :version, value: version, id: "filter_version" %>
+    <%# Carried through, or searching would silently reset the ranking to the
+        first scene rather than filtering the one being looked at. %>
+    <%= f.hidden_field :workload, value: workload, id: "filter_workload" %>
+    <%= f.search_field :q, value: filters[:q], placeholder: "Search processors",
+          autocomplete: "off", aria: { label: "Search processors" },
+          data: { action: "input->autosubmit#submit" }, class: field_classes %>
+    <%= f.select :vendor, vendor_options, { include_blank: "All vendors" },
+          data: { action: "change->autosubmit#submit" }, class: field_classes %>
+  <% end %>
+
+  <p class="eyebrow text-ink-faint"><%= total_label %></p>
+</div>

@@ -1,0 +1,63 @@
+<% @mode = "compare" %>
+<% content_for :title, "Compare processors" %>
+
+<%= render CpuSearchComponent.new(selected: @comparison.slugs, version: @version&.to_param,
+                                  disabled: @comparison.full?) %>
+
+<% if @comparison.empty? %>
+  <%= render SelectionTrayComponent.new(comparison: @comparison, version: @version&.to_param) %>
+
+  <section class="card mt-3 px-5 py-6">
+    <h2 class="eyebrow mb-3 text-accent">Start here</h2>
+    <p class="mb-4 max-w-[60ch] text-sm text-ink-muted">
+      Fastest processors on <%= @version&.scored_workloads&.first&.name %> in
+      <%= @version&.label %>. Every figure below is a median of public benchmark
+      submissions and links through to the individual runs behind it.
+    </p>
+    <ul class="flex flex-wrap gap-2">
+      <% Array(@suggestions).each do |cpu| %>
+        <li>
+          <%= link_to compare_path_with(cpu.slug, selected: [], version: @version&.to_param),
+                      class: "flex items-center gap-2 rounded-full bg-sunken px-3 py-1.5 text-[13px] font-medium text-ink hover:bg-ink hover:text-panel" do %>
+            <%= render VendorDotComponent.new(vendor: cpu.vendor) %>
+            <%= cpu.name %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+<% else %>
+  <%= render SelectionTrayComponent.new(comparison: @comparison, version: @version&.to_param) %>
+
+  <div class="card mt-3 px-5 py-4">
+    <%= render VersionPickerComponent.new(versions: @comparison.versions, current: @version,
+                                          selected: @comparison.slugs) %>
+  </div>
+
+  <%# One chart per workload, side by side rather than collapsed into a single
+      rank. A chip can lead on one scene and trail on another, and that is
+      information, not noise to be averaged away. %>
+  <section class="card mt-3 overflow-hidden"
+           data-controller="compare-highlight">
+    <div class="border-b border-line px-5 py-4">
+      <h2 class="eyebrow text-accent">Results by workload</h2>
+      <p class="mt-1 text-[13px] text-ink-muted">
+        Median of public submissions on each scene. Never averaged across scenes or
+        across benchmark versions.
+      </p>
+    </div>
+
+    <% if @comparison.workload_charts.empty? %>
+      <p class="px-5 py-8 text-center text-sm text-ink-muted">
+        No published figures for these processors in <%= @version&.label %>.
+        Try another benchmark series.
+      </p>
+    <% else %>
+      <% @comparison.workload_charts.each do |chart| %>
+        <%= render WorkloadChartComponent.new(chart: chart) %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <%= render SpecTableComponent.new(comparison: @comparison) %>
+<% end %>

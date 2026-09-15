@@ -1,0 +1,25 @@
+<%= turbo_frame_tag CpuSearchComponent::FRAME_ID do %>
+  <% if query.present? && query.length >= 2 %>
+    <ul class="mt-2 divide-y divide-line-soft overflow-hidden rounded-xl bg-panel">
+      <% results.each do |cpu| %>
+        <li>
+          <%# These links live inside the results frame, so without breaking out
+              to _top Turbo would navigate the frame and merely replace the
+              dropdown with the compare page's own (empty) search frame. %>
+          <%= link_to compare_path_with(cpu.slug, selected: selected, version: version),
+                      data: { turbo_frame: "_top" },
+                      class: "flex items-center justify-between gap-3 px-4 py-2.5 text-[13px] hover:bg-sunken" do %>
+            <span class="flex min-w-0 items-center gap-2">
+              <%= render VendorDotComponent.new(vendor: cpu.vendor) %>
+              <span class="truncate font-medium text-ink"><%= cpu.name %></span>
+            </span>
+            <span class="eyebrow shrink-0 text-ink-faint">Add</span>
+          <% end %>
+        </li>
+      <% end %>
+      <% if results.empty? %>
+        <li class="px-4 py-3 text-[13px] text-ink-muted">Nothing matches “<%= query %>”.</li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

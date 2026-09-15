@@ -1,0 +1,25 @@
+<div class="mb-4 flex min-h-9 flex-wrap items-center gap-2">
+  <% if comparison.empty? %>
+    <span class="text-sm text-ink-faint">Nothing selected yet — search above to add a processor.</span>
+  <% else %>
+    <% comparison.cpus.each do |cpu| %>
+      <span class="inline-flex items-center gap-2 rounded-full bg-panel py-1.5 ps-3.5 pe-2 text-[13px]
+                   font-medium transition-opacity duration-150"
+            data-cpu-slug="<%= cpu.slug %>"
+            data-compare-highlight-target="item"
+            data-action="mouseenter->compare-highlight#highlight mouseleave->compare-highlight#clear">
+        <%= render VendorDotComponent.new(vendor: cpu.vendor) %>
+        <%= cpu.name %>
+        <%= link_to compare_path_without(cpu.slug, selected: slugs, version: version),
+                    aria: { label: "Remove #{cpu.name}" },
+                    class: "flex size-5 items-center justify-center rounded-full text-base leading-none
+                            text-ink-faint hover:bg-accent-soft hover:text-accent" do %>
+          &times;
+        <% end %>
+      </span>
+    <% end %>
+    <% if slot_hint %>
+      <span class="eyebrow text-ink-faint"><%= slot_hint %></span>
+    <% end %>
+  <% end %>
+</div>

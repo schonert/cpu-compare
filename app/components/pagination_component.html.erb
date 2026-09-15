@@ -1,0 +1,15 @@
+<nav class="mt-3 flex items-center justify-between gap-3" aria-label="Pagination">
+  <% if first? %>
+    <span class="<%= disabled_classes %>">Previous</span>
+  <% else %>
+    <%= link_to "Previous", path_for(page - 1), class: link_classes, rel: "prev" %>
+  <% end %>
+
+  <p class="eyebrow text-ink-faint"><%= range_label %></p>
+
+  <% if last? %>
+    <span class="<%= disabled_classes %>">Next</span>
+  <% else %>
+    <%= link_to "Next", path_for(page + 1), class: link_classes, rel: "next" %>
+  <% end %>
+</nav>

@@ -1,0 +1,13 @@
+<div class="flex flex-wrap items-center gap-2">
+  <span class="eyebrow text-ink-faint">Benchmark</span>
+  <div class="flex flex-wrap items-center gap-1">
+    <% versions.each do |version| %>
+      <%= link_to version.label, compare_path_for_version(version.to_param, selected: selected),
+                  class: class_names(classes(version)),
+                  aria: { current: current?(version) ? "true" : nil } %>
+    <% end %>
+  </div>
+  <p class="eyebrow w-full text-ink-faint sm:w-auto">
+    Series are never combined — Cycles changes between majors
+  </p>
+</div>

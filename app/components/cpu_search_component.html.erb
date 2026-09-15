@@ -1,0 +1,18 @@
+<div class="relative mb-4">
+  <%= form_with url: search_cpus_path, method: :get,
+                data: { controller: "search", turbo_frame: CpuSearchComponent::FRAME_ID } do |f| %>
+    <%= f.hidden_field :cpus, value: selected.join(","), id: "search_cpus" %>
+    <%= f.hidden_field :version, value: version, id: "search_version" %>
+    <%= f.search_field :q,
+          placeholder: placeholder,
+          disabled: disabled?,
+          autocomplete: "off",
+          spellcheck: "false",
+          aria: { label: "Search processors", controls: CpuSearchComponent::FRAME_ID },
+          data: { search_target: "input", action: "input->search#submit" },
+          class: "w-full rounded-2xl bg-panel px-5 py-3.5 text-sm text-ink placeholder:text-ink-faint
+                  disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-faint" %>
+  <% end %>
+
+  <%= turbo_frame_tag CpuSearchComponent::FRAME_ID, class: "relative z-30 block" %>
+</div>

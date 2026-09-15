@@ -1,0 +1,7 @@
+<%# The figure and its provenance travel together. %>
+<span class="inline-flex flex-col gap-1">
+  <%= link_to value, measurements_path,
+              class: "#{class_names(value_classes)} underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent",
+              title: "See the #{sample_label} behind this figure" %>
+  <%= render FigureMetaComponent.new(score: score, show_source: show_source?) %>
+</span>

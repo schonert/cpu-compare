@@ -1,0 +1,54 @@
+# Scoring rules. This file is rendered verbatim at /methodology, so it is the
+# public, auditable statement of how every figure on the site is produced.
+# Bump `version` whenever a rule changes: scores record the version that was in
+# force when they were computed, so an old figure can always be explained.
+version: 1
+effective_from: 2026-09-14
+
+aggregation:
+  # Submissions are combined with the median, never the mean. Open Data is a
+  # public firehose: the same chip shows up throttled, virtualised and
+  # background-loaded, so the distribution has a long low tail. On the
+  # 5950X/monster group the minimum is 16.2 samples/min against a median of
+  # 199.5 — a mean would track the junk, a median does not.
+  statistic: median
+  # Quantiles use linear interpolation between order statistics (the R type-7 /
+  # numpy default definition). Named here because "the IQR" is ambiguous
+  # otherwise, and the spread is published.
+  quantile_method: linear_interpolation
+  # Scores below this many samples are stored but suppressed from display
+  # rather than shown as a noisy figure. Raising it hides more; lowering it
+  # shows shakier numbers. Both are visible in the score record.
+  min_samples: 5
+
+# Submissions that are recorded but never aggregated, with the reason stored on
+# the row so a suppressed measurement is explainable rather than invisible.
+eligibility:
+  # A deliberately thread-limited run measures a configuration, not the chip.
+  # 0.58% of CPU submissions in the September 2026 snapshot.
+  exclude_thread_restricted: true
+  # A dual-socket machine is a different system, not the same processor.
+  single_socket_only: true
+  # v1/v2 records carry an explicit per-scene result flag.
+  exclude_crashed: true
+
+# Cross-benchmark composites are OFF. A single blended number across
+# incompatible tests is exactly what this site refuses to publish: the compare
+# screen shows each workload side by side instead.
+#
+# If one is ever added, it is defined here — nowhere else — and the renderer at
+# /methodology will publish these weights along with every component's
+# contribution in the score breakdown. A composite that is not fully described
+# by this block cannot be computed.
+composites: {}
+# Example of the shape a composite must take, if one is ever enabled:
+#
+# composites:
+#   blender_4x_render:
+#     label: "Blender 4.x render"
+#     # Components must share a benchmark version: mixing series is refused.
+#     benchmark_version: "blender:4"
+#     components:
+#       - { workload: monster,    weight: 0.34 }
+#       - { workload: junkshop,   weight: 0.33 }
+#       - { workload: classroom,  weight: 0.33 }

@@ -1,0 +1,147 @@
+<% content_for :title, "Methodology" %>
+
+<article class="card overflow-hidden">
+  <div class="border-b border-line px-5 py-5">
+    <p class="eyebrow mb-2 text-accent">How these numbers are made</p>
+    <h1 class="text-2xl font-bold tracking-tight">Methodology</h1>
+    <p class="mt-2 max-w-[62ch] text-sm text-ink-muted">
+      Every figure on this site is a median of public benchmark submissions for one
+      processor, on one scene, within one major version of one benchmark. Nothing is
+      blended across scenes or across versions, and every figure links to the runs it
+      was computed from.
+    </p>
+  </div>
+
+  <section class="border-t border-line px-5 py-5">
+    <h2 class="eyebrow mb-3 text-accent">Measurement protocol</h2>
+    <p class="max-w-[68ch] text-[13px] leading-relaxed text-ink-muted"><%= @suite&.protocol %></p>
+    <% if @suite&.protocol_url %>
+      <p class="mt-2">
+        <%= link_to "Benchmark documentation", @suite.protocol_url,
+                    class: "text-[13px] underline underline-offset-2 hover:text-ink",
+                    rel: "noopener", target: "_blank" %>
+      </p>
+    <% end %>
+  </section>
+
+  <section class="border-t border-line px-5 py-5">
+    <h2 class="eyebrow mb-3 text-accent">Benchmark series are never combined</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse text-[13px]">
+        <thead>
+          <tr class="border-b border-line-soft">
+            <% %w[Series Metric Unit Direction].each do |head| %>
+              <th class="eyebrow px-0 py-2 pe-5 text-start text-ink-faint"><%= head %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @versions.each do |version| %>
+            <tr class="border-b border-line-soft last:border-b-0">
+              <td class="py-2 pe-5 font-medium text-ink"><%= version.label %></td>
+              <td class="py-2 pe-5 text-ink-muted"><%= version.metric_key.tr("_", " ") %></td>
+              <td class="py-2 pe-5 text-ink-muted"><%= version.metric_unit %></td>
+              <td class="py-2 pe-5 text-ink-muted">
+                <%= version.higher_is_better ? "Higher is better" : "Lower is better" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="border-t border-line px-5 py-5">
+    <h2 class="eyebrow mb-3 text-accent">Sources</h2>
+    <ul class="space-y-3">
+      <% @sources.each do |source| %>
+        <li class="text-[13px]">
+          <span class="flex flex-wrap items-baseline gap-x-2">
+            <span class="font-semibold text-ink">
+              <% if source.url %>
+                <%= link_to source.name, source.url, class: "underline underline-offset-2",
+                            rel: "noopener", target: "_blank" %>
+              <% else %>
+                <%= source.name %>
+              <% end %>
+            </span>
+            <span class="eyebrow text-ink-faint"><%= source.license %></span>
+            <% if source.licensed? %>
+              <span class="eyebrow rounded-full bg-accent-soft px-2 py-0.5 text-accent">Licensed — not ingested</span>
+            <% elsif source.redistributable? %>
+              <span class="eyebrow text-ink-faint">Redistributable</span>
+            <% end %>
+          </span>
+          <p class="mt-0.5 max-w-[68ch] text-ink-muted"><%= source.notes %></p>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <section class="border-t border-line px-5 py-5">
+    <h2 class="eyebrow mb-3 text-accent">Coverage</h2>
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-[13px] sm:grid-cols-3">
+      <% [["Processors", @coverage[:processors]],
+          ["With a published figure", @coverage[:displayable]],
+          ["Measurements stored", @coverage[:submissions]],
+          ["Measurements aggregated", @coverage[:eligible]],
+          ["Scores computed", @coverage[:scores]],
+          ["Suppressed below N=#{@config.min_samples}", @coverage[:suppressed]]].each do |label, value| %>
+        <div>
+          <dt class="eyebrow text-ink-faint"><%= label %></dt>
+          <dd class="figure mt-0.5 text-lg font-semibold text-ink"><%= number_with_delimiter(value) %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <% if @coverage[:exclusions].any? %>
+      <p class="mt-4 max-w-[68ch] text-[13px] text-ink-muted">
+        Recorded but deliberately not aggregated:
+        <%= @coverage[:exclusions].map { |reason, count| "#{number_with_delimiter(count)} #{reason.tr('_', ' ')}" }.to_sentence %>.
+        Nothing is discarded — every excluded measurement keeps its row and its reason.
+      </p>
+    <% end %>
+  </section>
+
+  <section class="border-t border-line px-5 py-5">
+    <h2 class="eyebrow mb-1 text-accent">Scoring rules</h2>
+    <p class="mb-3 max-w-[68ch] text-[13px] text-ink-muted">
+      This is <code>config/scoring.yml</code>, rendered exactly as the application reads
+      it. Version <%= @config.version %>.
+      <% if @config.composites? %>
+        The weights below are the ones in force, and every composite shows each
+        component's contribution in its breakdown.
+      <% else %>
+        No cross-benchmark composite is defined: results are shown per workload rather
+        than blended into one number.
+      <% end %>
+    </p>
+    <pre class="overflow-x-auto rounded-xl bg-sunken px-4 py-4 text-[12px] leading-relaxed text-ink-muted"><%= @config.source_text %></pre>
+  </section>
+
+  <section class="border-t border-line px-5 py-5">
+    <h2 class="eyebrow mb-3 text-accent">Ingest history</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse text-[13px]">
+        <thead>
+          <tr class="border-b border-line-soft">
+            <% ["Run", "Status", "Started", "Snapshot", "Checksum"].each do |head| %>
+              <th class="eyebrow px-0 py-2 pe-5 text-start text-ink-faint"><%= head %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @runs.each do |run| %>
+            <tr class="border-b border-line-soft last:border-b-0">
+              <td class="py-2 pe-5 font-medium text-ink"><%= run.kind.tr("_", " ") %></td>
+              <td class="py-2 pe-5 text-ink-muted"><%= run.status %></td>
+              <td class="figure py-2 pe-5 text-ink-muted"><%= run.started_at&.strftime("%Y-%m-%d %H:%M") %></td>
+              <td class="py-2 pe-5 text-ink-muted"><%= run.snapshot_label %></td>
+              <td class="figure py-2 pe-5 text-ink-faint"><%= run.snapshot_sha256&.first(12) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</article>

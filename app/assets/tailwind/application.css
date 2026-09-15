@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* Technical dashboard: white cards with generous radii on a light ground,
+   oversized figures, tiny uppercase labels, and a single orange accent.
+   Colour is never the only carrier of meaning — the name column identifies
+   each row, so bars stay monochrome apart from the leader.
+
+   No monospace face anywhere: the technical register comes from uppercase
+   tracking, tabular numerals and segmented bars. */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Tailwind's preflight points code/kbd/samp/pre at a monospace stack. Point
+     it back at the sans face so no element can render monospaced by accident. */
+  --font-mono: var(--font-sans);
+
+  --color-paper: #f1f2f4;
+  --color-panel: #ffffff;
+  --color-sunken: #f7f8f9;
+
+  --color-ink: #0a0a0b;
+  --color-ink-muted: #6b7480;
+  --color-ink-faint: #a0a8b1;
+
+  --color-line: #e6e9ec;
+  --color-line-soft: #f0f2f4;
+
+  /* The one accent. Marks the leader in a chart and every eyebrow label. */
+  --color-accent: #f0521e;
+  --color-accent-soft: #fdece5;
+
+  /* Unfilled segments of a bar. */
+  --color-track: #dee2e7;
+
+  --color-vendor-amd: #d81f26;
+  --color-vendor-intel: #0079d6;
+  --color-vendor-apple: #4b5158;
+  --color-vendor-qualcomm: #3a55e0;
+  --color-vendor-arm: #00a0cc;
+  --color-vendor-other: #7d8891;
+}
+
+/* Segmented bar fill: upright ticks on a fixed pitch, inked with currentColor
+   so the track and the filled portion share one alignment grid. */
+@utility ticks {
+  background-image: repeating-linear-gradient(
+    to right,
+    currentColor 0 var(--tick-width),
+    transparent var(--tick-width) var(--tick-pitch)
+  );
+}
+
+@layer base {
+  /* One source of truth for the bar grid. The gap between stacked bars is the
+     same measure as the gap between ticks, so the whole chart reads as a
+     single lattice rather than as rows that happen to contain ticks. */
+  :root {
+    --tick-width: 2px;
+    --tick-gap: 3px;
+    --tick-pitch: calc(var(--tick-width) + var(--tick-gap));
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    line-height: 1.45;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Tiny uppercase eyebrow, used for every label and section heading. */
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  /* Lining figures for anything that has to line up in a column. Deliberately
+     not set on body: tabular figures widen the hyphen, which looks wrong in
+     running prose ("Side-by-side"). */
+  .figure {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Stacked bars, spaced by the same gap that separates their ticks. */
+  .tick-rows > * + * {
+    margin-top: var(--tick-gap);
+  }
+
+  /* White card on the light ground. */
+  .card {
+    background-color: var(--color-panel);
+    border-radius: 1rem;
+  }
+}
