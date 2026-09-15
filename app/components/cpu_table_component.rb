@@ -33,4 +33,9 @@ class CpuTableComponent < ApplicationComponent
 
   def selected?(cpu) = selected.include?(cpu.slug)
   def full? = selected.size >= Comparison::MAX_CPUS
+
+  def add_path(cpu)
+    cpus_path_with(cpu.slug, selected: selected, version: version&.to_param,
+                   workload: workload&.key, **filters)
+  end
 end
