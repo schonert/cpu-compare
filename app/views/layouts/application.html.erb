@@ -10,7 +10,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap">
 
     <%= yield :head %>
     <link rel="icon" href="/icon.png" type="image/png">
@@ -21,7 +21,7 @@
   </head>
 
   <body class="min-h-screen antialiased">
-    <main class="mx-auto w-full max-w-6xl px-3 pt-5 pb-12 sm:px-5">
+    <main class="mx-auto w-full max-w-[1200px] px-4 pt-5 pb-12 sm:px-6">
       <%= render MastheadComponent.new(mode: @mode, selected: Array(@selected_slugs), version: @version&.to_param) %>
       <%= yield %>
       <%= render ProvenanceComponent.new %>

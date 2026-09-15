@@ -1,36 +1,41 @@
 @import "tailwindcss";
 
-/* Technical dashboard: white cards with generous radii on a light ground,
-   oversized figures, tiny uppercase labels, and a single orange accent.
-   Colour is never the only carrier of meaning — the name column identifies
-   each row, so bars stay monochrome apart from the leader.
-
-   No monospace face anywhere: the technical register comes from uppercase
-   tracking, tabular numerals and segmented bars. */
+/* Vercel design language (see DESIGN.md): an achromatic canvas where content
+   and function occupy the foreground. Near-white ground, near-black text, a
+   calibrated grayscale for hierarchy, and one interactive blue reserved for
+   links, focus and active states. Container boundaries are shadows, never
+   CSS borders; emphasis comes from weight (400/500/600 only, never 700) and
+   spacing, not from color or ornament.
+   Vendor identity still lives in the small status dots, which are the one
+   place chromatic color may appear at dot scale. Bars stay monochrome for
+   everyone — the leader is marked by weight, and colour is never the only
+   carrier of meaning. */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  /* Tailwind's preflight points code/kbd/samp/pre at a monospace stack. Point
-     it back at the sans face so no element can render monospaced by accident. */
-  --font-mono: var(--font-sans);
+  /* DESIGN.md sets code in Geist Mono 13px/500. */
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, monospace;
 
-  --color-paper: #f1f2f4;
+  --color-paper: #fafafa;
   --color-panel: #ffffff;
-  --color-sunken: #f7f8f9;
+  --color-sunken: #f2f2f2;
 
-  --color-ink: #0a0a0b;
-  --color-ink-muted: #6b7480;
-  --color-ink-faint: #a0a8b1;
+  --color-ink: #171717;
+  --color-ink-muted: #4d4d4d;
+  --color-ink-faint: #8f8f8f;
 
-  --color-line: #e6e9ec;
-  --color-line-soft: #f0f2f4;
+  --color-line: #ebebeb;
+  --color-line-soft: #f2f2f2;
 
-  /* The one accent. Marks the leader in a chart and every eyebrow label. */
-  --color-accent: #f0521e;
-  --color-accent-soft: #fdece5;
+  /* The one interactive accent. Links, focus rings and active states only. */
+  --color-accent: #0072f5;
+  --color-accent-soft: #eaf2fe;
+
+  /* Nav/button hover fill. */
+  --color-hover: #ebebeb;
 
   /* Unfilled segments of a bar. */
-  --color-track: #dee2e7;
+  --color-track: #ebebeb;
 
   --color-vendor-amd: #d81f26;
   --color-vendor-intel: #0079d6;
@@ -38,6 +43,16 @@
   --color-vendor-qualcomm: #3a55e0;
   --color-vendor-arm: #00a0cc;
   --color-vendor-other: #7d8891;
+
+  /* Shadow-as-border scale: zero offset, zero blur, 1px spread. */
+  --shadow-border: 0 0 0 1px rgb(0 0 0 / 0.08);
+  --shadow-card: 0 0 0 1px rgb(0 0 0 / 0.08), 0 2px 2px rgb(0 0 0 / 0.04);
+  --shadow-menu: 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 1px rgb(0 0 0 / 0.02),
+    0 4px 8px -4px rgb(0 0 0 / 0.04), 0 16px 24px -8px rgb(0 0 0 / 0.06);
+
+  /* Double-ring focus pattern: a white inner ring keeps the indicator visible
+     on any background, including blue elements. */
+  --shadow-focus-ring: 0 0 0 2px #fff, 0 0 0 4px var(--color-accent);
 }
 
 /* Segmented bar fill: upright ticks on a fixed pitch, inked with currentColor
@@ -62,6 +77,7 @@
 
   html {
     font-family: var(--font-sans);
+    font-feature-settings: "liga";
     -webkit-text-size-adjust: 100%;
   }
 
@@ -71,14 +87,33 @@
     line-height: 1.45;
   }
 
+  /* Display headings: semibold with tight, engineered tracking. Never bold —
+     the type system caps at 600. */
+  h1,
+  h3 {
+    font-weight: 600;
+    letter-spacing: -0.04em;
+  }
+
+  strong,
+  b {
+    font-weight: 600;
+  }
+
+  code,
+  pre {
+    font-weight: 500;
+  }
+
   :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: var(--shadow-focus-ring);
   }
 }
 
 @layer components {
-  /* Tiny uppercase eyebrow, used for every label and section heading. */
+  /* Tiny uppercase label, used for table headers, kickers and section
+     headings. Carries hierarchy through size and tracking, never color. */
   .eyebrow {
     font-size: 10px;
     font-weight: 600;
@@ -99,10 +134,45 @@
     margin-top: var(--tick-gap);
   }
 
-  /* White card on the light ground. */
+  /* White card on the light ground: 12px radius, boundary drawn as a shadow
+     so it never affects box-model dimensions. */
   .card {
     background-color: var(--color-panel);
-    border-radius: 1rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Removable selection tags: pill-shaped badges with a shadow boundary. */
+  .chip {
+    background-color: var(--color-panel);
+    border-radius: 9999px;
+    box-shadow: var(--shadow-border);
+  }
+
+  /* Text inputs and selects: 40px default height, 14px, shadow boundary,
+     6px radius. Large search variant via .field-lg. */
+  .field {
+    height: 40px;
+    border-radius: 6px;
+    background-color: var(--color-panel);
+    box-shadow: var(--shadow-border);
+    padding-inline: 12px;
+    font-size: 14px;
+    color: var(--color-ink);
+  }
+
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+
+  .field:focus {
+    outline: 1px auto #005fcc;
+    box-shadow: none;
+  }
+
+  .field-lg {
+    height: 48px;
+    font-size: 16px;
   }
 
   /* Sourced spec values hide their citation until hover or focus. Fixed
@@ -114,10 +184,9 @@
     z-index: 50;
     width: max-content;
     max-width: 16rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-line);
+    border-radius: 6px;
     background-color: var(--color-panel);
     padding: 0.4rem 0.65rem;
-    box-shadow: 0 8px 24px rgb(10 10 11 / 12%);
+    box-shadow: var(--shadow-menu);
   }
 }

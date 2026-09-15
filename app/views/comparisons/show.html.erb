@@ -8,7 +8,7 @@
   <%= render SelectionTrayComponent.new(comparison: @comparison, version: @version&.to_param) %>
 
   <section class="card mt-3 px-5 py-6">
-    <h2 class="eyebrow mb-3 text-accent">Start here</h2>
+    <h2 class="eyebrow mb-3 text-ink">Start here</h2>
     <p class="mb-4 max-w-[60ch] text-sm text-ink-muted">
       Fastest processors on <%= @version&.scored_workloads&.first&.name %> in
       <%= @version&.label %>. Every figure below is a median of public benchmark
@@ -18,7 +18,7 @@
       <% Array(@suggestions).each do |cpu| %>
         <li>
           <%= link_to compare_path_with(cpu.slug, selected: [], version: @version&.to_param),
-                      class: "flex items-center gap-2 rounded-full bg-sunken px-3 py-1.5 text-[13px] font-medium text-ink hover:bg-ink hover:text-panel" do %>
+                      class: "flex items-center gap-2 rounded-md bg-sunken px-3 py-1.5 text-[13px] font-medium text-ink hover:bg-ink hover:text-panel" do %>
             <%= render VendorDotComponent.new(vendor: cpu.vendor) %>
             <%= cpu.name %>
           <% end %>
@@ -45,7 +45,7 @@
         information, not noise to be averaged away. %>
     <section class="card mt-3 overflow-hidden">
       <div class="border-b border-line px-5 py-4">
-        <h2 class="eyebrow text-accent">Results by workload</h2>
+        <h2 class="eyebrow text-ink">Results by workload</h2>
         <p class="mt-1 text-[13px] text-ink-muted">
           Median of public submissions on each scene. Never averaged across scenes or
           across benchmark versions.

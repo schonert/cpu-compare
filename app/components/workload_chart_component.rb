@@ -2,8 +2,8 @@
 #
 # Names live in a fixed first column rather than on the bars, so every bar
 # starts at the same x-position and lengths read against each other directly.
-# That frees the bars from carrying identity, so they stay monochrome and only
-# the leader takes the accent.
+# That frees the bars from carrying identity, so they stay monochrome for
+# every row and the leader is marked by weight rather than color.
 #
 # Each workload gets its own chart. They are never averaged together: the whole
 # point of showing them side by side is that a chip can win one and lose
@@ -22,11 +22,11 @@ class WorkloadChartComponent < ApplicationComponent
   def bars = chart.bars
   def workload = chart.workload
 
-  def tick_ink(bar) = bar.best ? "text-accent" : "text-ink"
+  def tick_ink(_bar) = "text-ink"
 
   def value_classes(bar)
     ["figure shrink-0 text-end text-sm leading-none",
-     bar.best ? "font-bold text-accent" : "font-semibold text-ink"]
+     bar.best ? "font-semibold text-ink" : "font-medium text-ink"]
   end
 
   def name_classes(bar)

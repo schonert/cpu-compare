@@ -28,8 +28,8 @@ class PaginationComponent < ApplicationComponent
   end
 
   def link_classes
-    "rounded-full bg-panel px-4 py-2 text-[13px] font-medium transition hover:bg-ink hover:text-panel"
+    "rounded-md bg-panel px-4 py-2 text-[13px] font-medium shadow-border transition hover:bg-ink hover:text-panel"
   end
 
-  def disabled_classes = "rounded-full px-4 py-2 text-[13px] font-medium text-ink-faint"
+  def disabled_classes = "rounded-md px-4 py-2 text-[13px] font-medium text-ink-faint"
 end
