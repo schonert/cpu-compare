@@ -92,7 +92,7 @@ class PresentationContractTest < ActionDispatch::IntegrationTest
     assert_match(/Never averaged across scenes/, response.body)
   end
 
-  test "a suppressed figure is not published and says why" do
+  test "a suppressed figure still draws a faded bar" do
     thin = create_cpu(name: "AMD Ryzen 3 3100")
     3.times { create_submission(cpu: thin, value: 10) }
     Scoring::Aggregator.call
@@ -101,7 +101,9 @@ class PresentationContractTest < ActionDispatch::IntegrationTest
     get compare_path(cpus: "#{@fast.slug},#{thin.slug}")
 
     assert_response :success
-    assert_match(/Fewer than 5 runs on record/, response.body)
+    refute_match(/Fewer than 5 runs on record/, response.body)
+    assert_match(/opacity-40/, response.body)
+    assert_match(/#{Regexp.escape(thin.name)}/, response.body)
   end
 
   test "the methodology page publishes the scoring rules verbatim" do
